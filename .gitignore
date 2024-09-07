@@ -1,0 +1,24 @@
+/localsetting.py
+# Ignore Python bytecode
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore virtual environment
+venv/
+
+# Ignore Django database
+db.sqlite3
+
+# Ignore log files
+*.log
+
+# Ignore compiled translation files
+*.mo
+
+# Ignore static and media files (if applicable)
+static/
+media/
+
+# Ignore Django migrations (optional)
+*/migrations/*
