@@ -1,4 +1,4 @@
-/localsetting.py
+.localsetting.py
 # Ignore Python bytecode
 *.pyc
 *.pyo
