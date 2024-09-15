@@ -1,9 +1,6 @@
-{% load tailwind_tags %}
-<html>
-    <head> 
-        <title>Task list</title>
-        {% tailwind_css %}
-    </head>
+{% extends 'base/main.html' %}
+
+{% block content %}
 
     {% if request.user.is_authenticated %}
         <p>{{request.user}}</p>
@@ -40,4 +37,4 @@
         {% endfor %}
     </table>
 
-</html>
+{% endblock content %}

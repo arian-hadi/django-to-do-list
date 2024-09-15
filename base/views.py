@@ -10,19 +10,27 @@ from .models import Task
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    email = forms.EmailField(required=True)
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
 
 
 
 class CustomLoginView(LoginView):
     template_name = 'base/login.html'
-    fields = '__all__'
+    authentication_form = CustomAuthenticationForm 
     redirect_authenticated_user = True
 
     def get_success_url(self):
         return reverse_lazy('tasks')
+
     
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
