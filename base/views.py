@@ -73,6 +73,10 @@ class Register(FormView):
         if user is not None:
             login(self.request, user) #log the user in
         return super(Register,self).form_valid(form)
+    
+    def form_invalid(self, form):
+        # This handles form errors and returns the form back to the template
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
