@@ -9,17 +9,33 @@ from django.views.generic.edit import CreateView,UpdateView,DeleteView,FormView
 from .models import Task
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import login
+from django.contrib.auth import login, get_user_model, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
 
 
-class CustomAuthenticationForm(AuthenticationForm):
+class CustomAuthenticationForm(forms.Form):
     email = forms.EmailField(required=True)
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password']
+    password = forms.CharField(widget=forms.PasswordInput, required=True)
+    
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(CustomAuthenticationForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+
+        if email and password:
+                self.user_cache = authenticate(self.request, email = email, password = password)
+                if self.user_cache is None:
+                    raise forms.ValidationError('Invalid password or email')
+            
+        return self.cleaned_data
+        
+    def get_user(self):
+        return self.user_cache
 
 
 
@@ -27,6 +43,12 @@ class CustomLoginView(LoginView):
     template_name = 'base/login.html'
     authentication_form = CustomAuthenticationForm 
     redirect_authenticated_user = True
+
+    def get_form_kwargs(self):
+        kwargs = super(CustomLoginView, self).get_form_kwargs()
+        kwargs['request'] = self.request  # Pass the request to the form
+        return kwargs
+
 
     def get_success_url(self):
         return reverse_lazy('tasks')
