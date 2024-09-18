@@ -1,7 +1,7 @@
 {% extends 'base/main.html' %}
 {% load form_filters %}
 {% block content %}
-
+<div class="p-8 rounded-2xl bg-white shadow">
     <h2 class = 'text-gray-800 text-center text-2xl font-bold'>Login</h2>
     <form method="POST" class = "mt-8 space-y-4">
         {%csrf_token%}
@@ -34,6 +34,7 @@
         <p class = "text-gray-800 text-sm !mt-8 text-center">Don't have an account?<a href = '{%url "register" %}' class= "text-blue-600 hover:underline m1-1 whitespace-nowrap font-semibold">Register</a></p>
  
     </form>
+</div>
         
 
    

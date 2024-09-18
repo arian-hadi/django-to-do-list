@@ -2,24 +2,63 @@
 
 {% block content %}
 
-    {% if request.user.is_authenticated %}
-        <p>{{request.user}}</p>
-        <a href = '{% url "logout"%}'>Logout</a>
-    {% else %}
-        <a href = '{% url "login" %}'>Login</a>
-    {% endif %}
+<div class = "flex justify-between items-start p-2.5 rounded-t-md border-r-5 bg-gradient-to-r from-blue-500 to-blue-200">
+        <div class = "text-gray-200 py-2">
+            <h1 class = "text-4xl font-bold">Hello {{request.user|title}}</h1>
+            <h3 class = " text-lg mt-3">You have <i>{{count}}</i> incomplete task {{ count|pluralize:"s" }}</h3>
+        </div>
+        {% if request.user.is_authenticated %}
+            <a href = '{% url "logout"%}' class= "bg-red-500 text-white px-4 py-2 rounded">Logout</a>
+        {% else %}
+            <a href = '{% url "login" %}'>Login</a>
+        {% endif %}
+</div>
 
 
-    <hr>
-    <h1 class = "text-red-500">My To Do list</h1>
 
+
+    <div class = "flex justify-between items-center p-[10px]">
+        <form method = 'GET' class = "mt-1 flex">
+            <input type = 'text' name = 'search-task' value = "{{search_input}}" class="border rounded-[5px] border-blue-500">
+            <input class="border border-[#0400ff] text-blue-600 bg-white p-[5px] text-[14px] rounded-[5px] cursor-pointer no-underline" type = "submit" value = 'Search'>
+        </form>    
+        <a class = "text-blue-600 no-underline text-[15px] font-semibold  hover:bg-blue-500 hover:text-white p-[5px] rounded-[5px]" href = "{%url 'create-task' %}">&#x2b; Create task</a>
+    </div>
+<!-- 
     <a href = "{%url 'create-task' %}">Create task</a>
-
     <form method = 'GET'>
         <input type = 'submit' vlaue = 'search'>
         <input type = 'text' name = 'search-task' value = {{search_input}}>
     </form>
-
+     -->
+    <div class="h-100 w-full flex flex-col items-center justify-center bg-teal-lightest font-sans">
+        {% for task in tasks %}
+        <div class="bg-white shadow p-4 w-full border-t border-b border-gray-300">
+            <div class="flex items-center justify-between mb-4 w-full">
+                <!-- Circle and text container -->
+                <div class="flex items-center space-x-2">
+                    {% if task.complete %}
+                    <div class="h-[20px] w-[20px] bg-[rgb(105,192,105)] rounded-full"></div>
+                    <i><s><a href='{% url "task-update" task.id %}' class="text-grey-darkest">{{ task }}</a></s></i>
+                    {% else %}
+                    <div class="h-[20px] w-[20px] bg-[rgb(218,218,218)] rounded-full"></div>
+                    <a href='{% url "task-update" task.id %}' class="text-grey-darkest">{{ task }}</a>
+                    {% endif %}
+                </div>
+                <!-- "X" delete button -->
+                <a class="flex-no-shrink p-2 ml-2 hover:bg-red" href='{% url "task-delete" task.id %}'>&#x2716;</a>
+            </div>
+        </div>
+        {% empty %}
+        <h3>No items in list</h3>
+        {% endfor %}
+    </div>
+    
+    
+    
+    
+    
+<!-- 
     <table>
         <tr>
             <th>Item</th>
@@ -35,6 +74,6 @@
         {% empty %}
         <h3>No items in list</h3>
         {% endfor %}
-    </table>
+    </table> -->
 
 {% endblock content %}
